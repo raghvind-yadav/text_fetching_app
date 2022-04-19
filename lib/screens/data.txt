@@ -1,0 +1,40 @@
+ Future<String> get _localPath async {
+    // final directory = await getApplicationDocumentsDirectory();
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+    // final directory = await getExternalStorageDirectory();
+    final directory = await getExternalStorageDirectory();
+    // excessing android folder in phones memory
+
+    print(directory!.path);
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/result.txt');
+  }
+
+  Future<String> readText() async {
+    try {
+      final file = await _localFile;
+      final contents = await file.readAsString();
+      return contents.characters.string;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  Future<File> writeText(String text) async {
+    final file = await _localFile;
+    return file.writeAsString(text);
+  }
+
+
+// in on pressed
+writeText(scanText);
+                var texts = readText();
+                print(texts);
+                
